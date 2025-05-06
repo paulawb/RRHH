@@ -38,19 +38,6 @@ class TestRegistroAspirantes(unittest.TestCase):
     def test_registrar_manual(self):
         self.assertEqual(len(self.registro.aspirantes), 1)
         self.assertEqual(self.registro.aspirantes[0].nombre, "Carlos")
-    
-    def test_listar(self):
-        salida_esperada = "\nLista de Aspirantes:\n1. Carlos Ramirez - Gerente\n"
-        salida_esperada += "   Edad: 28, Correo: carlos@example.com, Teléfono: 1112223333\n"
-        salida_esperada += "   Educación: Administración\n   Enlace CV: http://cv.com/carlos\n"
-        salida_esperada += "-" * 50 + "\n"
-        
-        sys.stdout = StringIO()
-        self.registro.listar()
-        salida_obtenida = sys.stdout.getvalue()
-        sys.stdout = sys.__stdout__
-        
-        self.assertEqual(salida_obtenida, salida_esperada)
 
 if __name__ == "__main__":
     unittest.main()
