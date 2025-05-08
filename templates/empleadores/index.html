@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}Empleadores - Sistema de Contratación RRHH{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Empleadores</h1>
+    <a href="/empleadores/nuevo" class="btn btn-success">
+        <i class="bi bi-plus-circle"></i> Nuevo Empleador
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        Listado de Empleadores
+    </div>
+    <div class="card-body">
+        {% if empleadores %}
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Empresa</th>
+                        <th>Sector</th>
+                        <th>Email de Contacto</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for empleador in empleadores %}
+                    <tr>
+                        <td>{{ empleador.id }}</td>
+                        <td>{{ empleador.nombre_empresa }}</td>
+                        <td>{{ empleador.sector }}</td>
+                        <td>{{ empleador.email_contacto }}</td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <a href="/empleadores/{{ empleador.id }}" class="btn btn-sm btn-info">
+                                    <i class="bi bi-eye"></i> Ver
+                                </a>
+                                <a href="/empleadores/editar/{{ empleador.id }}" class="btn btn-sm btn-warning">
+                                    <i class="bi bi-pencil"></i> Editar
+                                </a>
+                                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ empleador.id }}">
+                                    <i class="bi bi-trash"></i> Eliminar
+                                </button>
+                            </div>
+                            
+                            <!-- Modal de confirmación para eliminar -->
+                            <div class="modal fade" id="deleteModal{{ empleador.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ empleador.id }}" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="deleteModalLabel{{ empleador.id }}">Confirmar eliminación</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            ¿Está seguro que desea eliminar al empleador {{ empleador.nombre_empresa }}?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                            <form action="/empleadores/eliminar/{{ empleador.id }}" method="POST" style="display: inline;">
+                                                <button type="submit" class="btn btn-danger">Eliminar</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="alert alert-info">
+            No hay empleadores registrados. <a href="/empleadores/nuevo" class="alert-link">Agregar un nuevo empleador</a>.
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+{% endblock %}

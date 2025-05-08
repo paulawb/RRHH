@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}Aspirantes - Sistema de Contratación RRHH{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Aspirantes</h1>
+    <a href="/aspirantes/nuevo" class="btn btn-success">
+        <i class="bi bi-plus-circle"></i> Nuevo Aspirante
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        Listado de Aspirantes
+    </div>
+    <div class="card-body">
+        {% if aspirantes %}
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>Email</th>
+                        <th>Área de Interés</th>
+                        <th>Puesto Deseado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for aspirante in aspirantes %}
+                    <tr>
+                        <td>{{ aspirante.id }}</td>
+                        <td>{{ aspirante.nombre }}</td>
+                        <td>{{ aspirante.apellido }}</td>
+                        <td>{{ aspirante.email }}</td>
+                        <td>{{ aspirante.area_interes }}</td>
+                        <td>{{ aspirante.puesto_deseado }}</td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <a href="/aspirantes/{{ aspirante.id }}" class="btn btn-sm btn-info">
+                                    <i class="bi bi-eye"></i> Ver
+                                </a>
+                                <a href="/aspirantes/editar/{{ aspirante.id }}" class="btn btn-sm btn-warning">
+                                    <i class="bi bi-pencil"></i> Editar
+                                </a>
+                                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ aspirante.id }}">
+                                    <i class="bi bi-trash"></i> Eliminar
+                                </button>
+                            </div>
+                            
+                            <!-- Modal de confirmación para eliminar -->
+                            <div class="modal fade" id="deleteModal{{ aspirante.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ aspirante.id }}" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="deleteModalLabel{{ aspirante.id }}">Confirmar eliminación</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            ¿Está seguro que desea eliminar al aspirante {{ aspirante.nombre }} {{ aspirante.apellido }}?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                            <form action="/aspirantes/eliminar/{{ aspirante.id }}" method="POST" style="display: inline;">
+                                                <button type="submit" class="btn btn-danger">Eliminar</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="alert alert-info">
+            No hay aspirantes registrados. <a href="/aspirantes/nuevo" class="alert-link">Agregar un nuevo aspirante</a>.
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+{% endblock %}

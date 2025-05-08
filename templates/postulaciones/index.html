@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% block title %}Postulaciones - Sistema de Contratación RRHH{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Postulaciones</h1>
+    <a href="/postulaciones/nuevo" class="btn btn-success">
+        <i class="bi bi-plus-circle"></i> Nueva Postulación
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        Listado de Postulaciones
+    </div>
+    <div class="card-body">
+        <div class="mb-3">
+            <form method="GET" action="/postulaciones" class="row g-3">
+                <div class="col-md-3">
+                    <select class="form-select" name="estado">
+                        <option value="">Todos los estados</option>
+                        <option value="Pendiente">Pendiente</option>
+                        <option value="Aceptada">Aceptada</option>
+                        <option value="Rechazada">Rechazada</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select" name="aspirante_id">
+                        <option value="">Todos los aspirantes</option>
+                        {% for aspirante in aspirantes %}
+                        <option value="{{ aspirante.id }}">{{ aspirante.nombre }} {{ aspirante.apellido }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select" name="oferta_id">
+                        <option value="">Todas las ofertas</option>
+                        {% for oferta in ofertas %}
+                        <option value="{{ oferta.id }}">{{ oferta.titulo }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-search"></i> Buscar
+                    </button>
+                    <a href="/postulaciones" class="btn btn-outline-secondary">
+                        <i class="bi bi-x-circle"></i> Limpiar
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        {% if postulaciones %}
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Aspirante</th>
+                        <th>Oferta</th>
+                        <th>Fecha</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for postulacion in postulaciones %}
+                    <tr>
+                        <td>{{ postulacion.id }}</td>
+                        <td>
+                            <a href="/aspirantes/{{ postulacion.aspirante_id }}">
+                                {{ postulacion.aspirante.nombre }} {{ postulacion.aspirante.apellido }}
+                            </a>
+                        </td>
+                        <td>
+                            <a href="/ofertas/{{ postulacion.oferta_id }}">
+                                {{ postulacion.oferta.titulo }}
+                            </a>
+                        </td>
+                        <td>{{ postulacion.fecha_postulacion.strftime('%d/%m/%Y') }}</td>
+                        <td>
+                            <span class="badge {% if postulacion.estado == 'Aceptada' %}bg-success{% elif postulacion.estado == 'Rechazada' %}bg-danger{% else %}bg-warning{% endif %}">
+                                {{ postulacion.estado }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <a href="/postulaciones/{{ postulacion.id }}" class="btn btn-sm btn-info">
+                                    <i class="bi bi-eye"></i> Ver
+                                </a>
+                                <a href="/postulaciones/editar/{{ postulacion.id }}" class="btn btn-sm btn-warning">
+                                    <i class="bi bi-pencil"></i> Editar
+                                </a>
+                                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ postulacion.id }}">
+                                    <i class="bi bi-trash"></i> Eliminar
+                                </button>
+                            </div>
+                            
+                            <!-- Modal de confirmación para eliminar -->
+                            <div class="modal fade" id="deleteModal{{ postulacion.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ postulacion.id }}" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="deleteModalLabel{{ postulacion.id }}">Confirmar eliminación</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            ¿Está seguro que desea eliminar la postulación de {{ postulacion.aspirante.nombre }} {{ postulacion.aspirante.apellido }} para la oferta "{{ postulacion.oferta.titulo }}"?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                            <form action="/postulaciones/eliminar/{{ postulacion.id }}" method="POST" style="display: inline;">
+                                                <button type="submit" class="btn btn-danger">Eliminar</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="alert alert-info">
+            No hay postulaciones que coincidan con los criterios de búsqueda. <a href="/postulaciones/nuevo" class="alert-link">Crear una nueva postulación</a>.
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+{% endblock %}

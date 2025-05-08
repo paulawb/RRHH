@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}Inicio - Sistema de Contratación RRHH{% endblock %}
+
+{% block content %}
+<div class="jumbotron bg-light p-5 rounded">
+    <h1 class="display-4">Sistema de Contratación RRHH</h1>
+    <p class="lead">Bienvenido al sistema de gestión de recursos humanos y contratación.</p>
+    <hr class="my-4">
+    <p>Utilice la navegación superior para acceder a las diferentes secciones del sistema.</p>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Aspirantes</h5>
+                <p class="card-text">Gestión de candidatos y sus perfiles profesionales.</p>
+                <a href="/aspirantes" class="btn btn-primary">Ver Aspirantes</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Empleadores</h5>
+                <p class="card-text">Empresas y organizaciones que ofrecen puestos de trabajo.</p>
+                <a href="/empleadores" class="btn btn-primary">Ver Empleadores</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Ofertas Laborales</h5>
+                <p class="card-text">Listado de puestos de trabajo disponibles.</p>
+                <a href="/ofertas" class="btn btn-primary">Ver Ofertas</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Postulaciones</h5>
+                <p class="card-text">Seguimiento de aplicaciones a ofertas laborales.</p>
+                <a href="/postulaciones" class="btn btn-primary">Ver Postulaciones</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                API Endpoints
+            </div>
+            <div class="card-body">
+                <p>El sistema también ofrece una API REST para integración con otros sistemas:</p>
+                <ul class="list-group">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Aspirantes
+                        <a href="/api/aspirantes" class="badge bg-primary rounded-pill text-decoration-none">Ver API</a>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Empleadores
+                        <a href="/api/empleadores" class="badge bg-primary rounded-pill text-decoration-none">Ver API</a>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Ofertas Laborales
+                        <a href="/api/ofertas" class="badge bg-primary rounded-pill text-decoration-none">Ver API</a>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Postulaciones
+                        <a href="/api/postulaciones" class="badge bg-primary rounded-pill text-decoration-none">Ver API</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

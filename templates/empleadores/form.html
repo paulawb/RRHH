@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% if empleador %}Editar Empleador{% else %}Nuevo Empleador{% endif %} - Sistema de Contratación RRHH
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>{% if empleador %}Editar Empleador{% else %}Nuevo Empleador{% endif %}</h1>
+    <a href="{% if empleador %}/empleadores/{{ empleador.id }}{% else %}/empleadores{% endif %}" class="btn btn-secondary">
+        <i class="bi bi-arrow-left"></i> Volver
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        {% if empleador %}Editar información de {{ empleador.nombre_empresa }}{% else %}Registrar nuevo empleador{% endif %}
+    </div>
+    <div class="card-body">
+        <form method="POST" action="{% if empleador %}/empleadores/editar/{{ empleador.id }}{% else %}/empleadores/nuevo{% endif %}">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5 class="card-title">Información de la Empresa</h5>
+                    
+                    <div class="mb-3">
+                        <label for="nombre_empresa" class="form-label">Nombre de la Empresa *</label>
+                        <input type="text" class="form-control" id="nombre_empresa" name="nombre_empresa" value="{{ empleador.nombre_empresa if empleador else '' }}" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="sector" class="form-label">Sector *</label>
+                        <select class="form-select" id="sector" name="sector" required>
+                            <option value="">Seleccione un sector</option>
+                            <option value="Tecnología">Tecnología</option>
+                            <option value="Salud">Salud</option>
+                            <option value="Educación">Educación</option>
+                            <option value="Finanzas">Finanzas</option>
+                            <option value="Manufactura">Manufactura</option>
+                            <option value="Comercio">Comercio</option>
+                            <option value="Servicios">Servicios</option>
+                            <option value="Construcción">Construcción</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <h5 class="card-title">Información de Contacto</h5>
+                    
+                    <div class="mb-3">
+                        <label for="email_contacto" class="form-label">Email de Contacto *</label>
+                        <input type="email" class="form-control" id="email_contacto" name="email_contacto" value="{{ empleador.email_contacto if empleador else '' }}" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="telefono_contacto" class="form-label">Teléfono de Contacto *</label>
+                        <input type="tel" class="form-control" id="telefono_contacto" name="telefono_contacto" value="{{ empleador.telefono_contacto if empleador else '' }}" required>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                <button type="reset" class="btn btn-outline-secondary me-md-2">Limpiar</button>
+                <button type="submit" class="btn btn-primary">
+                    {% if empleador %}Actualizar{% else %}Registrar{% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+{% endblock %}

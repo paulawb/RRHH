@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block title %}Detalle de Postulación - Sistema de Contratación RRHH{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Detalle de Postulación</h1>
+    <div>
+        <a href="/postulaciones" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Volver
+        </a>
+        <a href="/postulaciones/editar/{{ postulacion.id }}" class="btn btn-warning">
+            <i class="bi bi-pencil"></i> Editar
+        </a>
+        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+            <i class="bi bi-trash"></i> Eliminar
+        </button>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                Información de la Postulación
+            </div>
+            <div class="card-body">
+                <ul class="list-group mb-4">
+                    <li class="list-group-item"><strong>ID:</strong> {{ postulacion.id }}</li>
+                    <li class="list-group-item"><strong>Fecha de Postulación:</strong> {{ postulacion.fecha_postulacion.strftime('%d/%m/%Y %H:%M') }}</li>
+                    <li class="list-group-item">
+                        <strong>Estado:</strong> 
+                        <span class="badge {% if postulacion.estado == 'Aceptada' %}bg-success{% elif postulacion.estado == 'Rechazada' %}bg-danger{% else %}bg-warning{% endif %}">
+                            {{ postulacion.estado }}
+                        </span>
+                    </li>
+                </ul>
+
+                {% if postulacion.estado != 'Pendiente' %}
+                <div class="card mb-4">
+                    <div class="card-header {% if postulacion.estado == 'Aceptada' %}bg-success{% else %}bg-danger{% endif %} text-white">
+                        Resultado de la Postulación
+                    </div>
+                    <div class="card-body">
+                        <p>
+                            {% if postulacion.estado == 'Aceptada' %}
+                            La postulación ha sido <strong>aceptada</strong>. El empleador se pondrá en contacto con el aspirante para continuar con el proceso.
+                            {% else %}
+                            La postulación ha sido <strong>rechazada</strong>. Gracias por su interés.
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="d-grid gap-2 mt-4">
+                    {% if postulacion.estado == 'Pendiente' %}
+                    <form action="/postulaciones/cambiar-estado/{{ postulacion.id }}" method="POST">
+                        <input type="hidden" name="estado" value="Aceptada">
+                        <button type="submit" class="btn btn-success w-100 mb-2">
+                            <i class="bi bi-check-circle"></i> Aceptar Postulación
+                        </button>
+                    </form>
+                    <form action="/postulaciones/cambiar-estado/{{ postulacion.id }}" method="POST">
+                        <input type="hidden" name="estado" value="Rechazada">
+                        <button type="submit" class="btn btn-danger w-100">
+                            <i class="bi bi-x-circle"></i> Rechazar Postulación
+                        </button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                Información del Aspirante
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">{{ postulacion.aspirante.nombre }} {{ postulacion.aspirante.apellido }}</h5>
+                <ul class="list-group mb-3">
+                    <li class="list-group-item"><strong>Email:</strong> {{ postulacion.aspirante.email }}</li>
+                    <li class="list-group-item"><strong>Teléfono:</strong> {{ postulacion.aspirante.telefono }}</li>
+                    <li class="list-group-item"><strong>Edad:</strong> {{ postulacion.aspirante.edad }} años</li>
+                    <li class="list-group-item"><strong>Área de Interés:</strong> {{ postulacion.aspirante.area_interes }}</li>
+                    <li class="list-group-item"><strong>Puesto Deseado:</strong> {{ postulacion.aspirante.puesto_deseado }}</li>
+                </ul>
+                <a href="/aspirantes/{{ postulacion.aspirante_id }}" class="btn btn-outline-primary">
+                    <i class="bi bi-person"></i> Ver Perfil Completo
+                </a>
+                <a href="{{ postulacion.aspirante.url_cv }}" target="_blank" class="btn btn-outline-info">
+                    <i class="bi bi-file-earmark-text"></i> Ver CV
+                </a>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                Información de la Oferta
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">{{ postulacion.oferta.titulo }}</h5>
+                <ul class="list-group mb-3">
+                    <li class="list-group-item"><strong>Empresa:</strong> {{ postulacion.oferta.empleador.nombre_empresa }}</li>
+                    <li class="list-group-item"><strong>Área:</strong> {{ postulacion.oferta.area }}</li>
+                    <li class="list-group-item"><strong>Ubicación:</strong> {{ postulacion.oferta.ubicacion }}</li>
+                    <li class="list-group-item"><strong>Salario:</strong> {% if postulacion.oferta.salario %}${{ postulacion.oferta.salario }}{% else %}No especificado{% endif %}</li>
+                </ul>
+                <a href="/ofertas/{{ postulacion.oferta_id }}" class="btn btn-outline-success">
+                    <i class="bi bi-briefcase"></i> Ver Oferta Completa
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de confirmación para eliminar -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirmar eliminación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                ¿Está seguro que desea eliminar la postulación de {{ postulacion.aspirante.nombre }} {{ postulacion.aspirante.apellido }} para la oferta "{{ postulacion.oferta.titulo }}"?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <form action="/postulaciones/eliminar/{{ postulacion.id }}" method="POST" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+{% endblock %}

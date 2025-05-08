@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% if oferta %}Editar Oferta Laboral{% else %}Nueva Oferta Laboral{% endif %} - Sistema de Contratación RRHH
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>{% if oferta %}Editar Oferta Laboral{% else %}Nueva Oferta Laboral{% endif %}</h1>
+    <a href="{% if oferta %}/ofertas/{{ oferta.id }}{% else %}/ofertas{% endif %}" class="btn btn-secondary">
+        <i class="bi bi-arrow-left"></i> Volver
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        {% if oferta %}Editar información de "{{ oferta.titulo }}"{% else %}Publicar nueva oferta laboral{% endif %}
+    </div>
+    <div class="card-body">
+        <form method="POST" action="{% if oferta %}/ofertas/editar/{{ oferta.id }}{% else %}/ofertas/nuevo{% endif %}">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5 class="card-title">Información Básica</h5>
+                    
+                    <div class="mb-3">
+                        <label for="titulo" class="form-label">Título *</label>
+                        <input type="text" class="form-control" id="titulo" name="titulo" value="{{ oferta.titulo if oferta else '' }}" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="area" class="form-label">Área *</label>
+                        <select class="form-select" id="area" name="area" required>
+                            <option value="">Seleccione un área</option>
+                            <option value="Tecnología">Tecnología</option>
+                            <option value="Administración">Administración</option>
+                            <option value="Marketing">Marketing</option>
+                            <option value="Ventas">Ventas</option>
+                            <option value="Recursos Humanos">Recursos Humanos</option>
+                            <option value="Finanzas">Finanzas</option>
+                            <option value="Producción">Producción</option>
+                            <option value="Logística">Logística</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="ubicacion" class="form-label">Ubicación *</label>
+                        <input type="text" class="form-control" id="ubicacion" name="ubicacion" value="{{ oferta.ubicacion if oferta else '' }}" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="salario" class="form-label">Salario</label>
+                        <input type="number" class="form-control" id="salario" name="salario" value="{{ oferta.salario if oferta and oferta.salario else '' }}" step="0.01" min="0">
+                        <div class="form-text">Deje en blanco si no desea especificar el salario.</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="empleador_id" class="form-label">Empleador *</label>
+                        <select class="form-select" id="empleador_id" name="empleador_id" required>
+                            <option value="">Seleccione un empleador</option>
+                            {% for empleador in empleadores %}
+                            <option value="{{ empleador.id }}" {% if oferta and oferta.empleador_id == empleador.id %}selected{% endif %}>
+                                {{ empleador.nombre_empresa }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <h5 class="card-title">Detalles de la Oferta</h5>
+                    
+                    <div class="mb-3">
+                        <label for="descripcion" class="form-label">Descripción *</label>
+                        <textarea class="form-control" id="descripcion" name="descripcion" rows="5" required>{{ oferta.descripcion if oferta else '' }}</textarea>
+                        <div class="form-text">Describa detalladamente el puesto de trabajo, responsabilidades y beneficios.</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="requisitos" class="form-label">Requisitos *</label>
+                        <textarea class="form-control" id="requisitos" name="requisitos" rows="5" required>{{ oferta.requisitos if oferta else '' }}</textarea>
+                        <div class="form-text">Especifique los requisitos necesarios para aplicar al puesto.</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                <button type="reset" class="btn btn-outline-secondary me-md-2">Limpiar</button>
+                <button type="submit" class="btn btn-primary">
+                    {% if oferta %}Actualizar{% else %}Publicar{% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+{% endblock %}

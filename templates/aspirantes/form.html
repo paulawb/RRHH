@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% if aspirante %}Editar Aspirante{% else %}Nuevo Aspirante{% endif %} - Sistema de Contratación RRHH
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>{% if aspirante %}Editar Aspirante{% else %}Nuevo Aspirante{% endif %}</h1>
+    <a href="{% if aspirante %}/aspirantes/{{ aspirante.id }}{% else %}/aspirantes{% endif %}" class="btn btn-secondary">
+        <i class="bi bi-arrow-left"></i> Volver
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        {% if aspirante %}Editar información de {{ aspirante.nombre }} {{ aspirante.apellido }}{% else %}Registrar nuevo aspirante{% endif %}
+    </div>
+    <div class="card-body">
+        <form method="POST" action="{% if aspirante %}/aspirantes/editar/{{ aspirante.id }}{% else %}/aspirantes/nuevo{% endif %}">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5 class="card-title">Información Personal</h5>
+                    
+                    <div class="mb-3">
+                        <label for="nombre" class="form-label">Nombre *</label>
+                        <input type="text" class="form-control" id="nombre" name="nombre" value="{{ aspirante.nombre if aspirante else '' }}" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="apellido" class="form-label">Apellido *</label>
+                        <input type="text" class="form-control" id="apellido" name="apellido" value="{{ aspirante.apellido if aspirante else '' }}" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="edad" class="form-label">Edad *</label>
+                        <input type="number" class="form-control" id="edad" name="edad" value="{{ aspirante.edad if aspirante else '' }}" required min="18" max="100">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email *</label>
+                        <input type="email" class="form-control" id="email" name="email" value="{{ aspirante.email if aspirante else '' }}" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="telefono" class="form-label">Teléfono *</label>
+                        <input type="tel" class="form-control" id="telefono" name="telefono" value="{{ aspirante.telefono if aspirante else '' }}" required>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <h5 class="card-title">Información Profesional</h5>
+                    
+                    <div class="mb-3">
+                        <label for="area_interes" class="form-label">Área de Interés *</label>
+                        <select class="form-select" id="area_interes" name="area_interes" required>
+                            <option value="">Seleccione un área</option>
+                            <option value="Tecnología">Tecnología</option>
+                            <option value="Administración">Administración</option>
+                            <option value="Marketing">Marketing</option>
+                            <option value="Ventas">Ventas</option>
+                            <option value="Recursos Humanos">Recursos Humanos</option>
+                            <option value="Finanzas">Finanzas</option>
+                            <option value="Producción">Producción</option>
+                            <option value="Logística">Logística</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="puesto_deseado" class="form-label">Puesto Deseado *</label>
+                        <input type="text" class="form-control" id="puesto_deseado" name="puesto_deseado" value="{{ aspirante.puesto_deseado if aspirante else '' }}" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="url_cv" class="form-label">URL del CV *</label>
+                        <input type="url" class="form-control" id="url_cv" name="url_cv" value="{{ aspirante.url_cv if aspirante else '' }}" required>
+                        <div class="form-text">Ingrese la URL donde se encuentra alojado su CV (Google Drive, Dropbox, etc.)</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                <button type="reset" class="btn btn-outline-secondary me-md-2">Limpiar</button>
+                <button type="submit" class="btn btn-primary">
+                    {% if aspirante %}Actualizar{% else %}Registrar{% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+{% endblock %}

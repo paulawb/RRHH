@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% if postulacion %}Editar Postulación{% else %}Nueva Postulación{% endif %} - Sistema de Contratación RRHH
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>{% if postulacion %}Editar Postulación{% else %}Nueva Postulación{% endif %}</h1>
+    <a href="{% if postulacion %}/postulaciones/{{ postulacion.id }}{% else %}/postulaciones{% endif %}" class="btn btn-secondary">
+        <i class="bi bi-arrow-left"></i> Volver
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        {% if postulacion %}Editar información de la postulación{% else %}Registrar nueva postulación{% endif %}
+    </div>
+    <div class="card-body">
+        <form method="POST" action="{% if postulacion %}/postulaciones/editar/{{ postulacion.id }}{% else %}/postulaciones/nuevo{% endif %}">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="aspirante_id" class="form-label">Aspirante *</label>
+                        <select class="form-select" id="aspirante_id" name="aspirante_id" required>
+                            <option value="">Seleccione un aspirante</option>
+                            {% for aspirante in aspirantes %}
+                            <option value="{{ aspirante.id }}">
+                                {{ aspirante.nombre }} {{ aspirante.apellido }} - {{ aspirante.email }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="oferta_id" class="form-label">Oferta Laboral *</label>
+                        <select class="form-select" id="oferta_id" name="oferta_id" required>
+                            <option value="">Seleccione una oferta</option>
+                            {% for oferta in ofertas %}
+                            <option value="{{ oferta.id }}">
+                                {{ oferta.titulo }} - {{ oferta.empleador.nombre_empresa }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            {% if postulacion %}
+            <div class="row mt-3">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="estado" class="form-label">Estado *</label>
+                        <select class="form-select" id="estado" name="estado" required>
+                            <option value="Pendiente">Pendiente</option>
+                            <option value="Aceptada">Aceptada</option>
+                            <option value="Rechazada">Rechazada</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                <button type="reset" class="btn btn-outline-secondary me-md-2">Limpiar</button>
+                <button type="submit" class="btn btn-primary">
+                    {% if postulacion %}Actualizar{% else %}Registrar{% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+{% endblock %}
